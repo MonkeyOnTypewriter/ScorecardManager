@@ -1,0 +1,178 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div id="loan-forms"></div>
+    <button type="submit">Submit</button>
+</form>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const scorecardElement = document.getElementById('id_scorecard');
+        scorecardElement.addEventListener('change', async () => {
+            const scorecardId = scorecardElement.value;
+            
+            try {
+                const response = await fetch(`{% url "loan_forms" %}?scorecard_id=${scorecardId}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('loan-forms').innerHTML = data.html;
+                } else {
+                    console.error('Error:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+            }
+        });
+    });
+    </script>
+
+
+
+<script>
+
+    async function filter_creditline(linetype_id, scorecardtier_id, loan_form) {
+        try {
+                    const response = await fetch(
+                        `{% url "filter_creditlines" %}?linetype_id=${linetype_id}&scorecardtier_id=${scorecardtier_id}`,
+                        {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        }
+                    );
+                    if (response.ok) {
+                    const data = await response.json();
+                    const creditlimitSelect = loan_form.querySelector('[name="creditlimit"]');
+                    creditlimitSelect.innerHTML = '';
+                    data.creditlines.forEach(creditline => {
+                        const option = document.createElement('option');
+                        option.value = creditline.id;
+                        option.textContent = creditline.name;
+                        creditlimitSelect.appendChild(option);
+                    });
+                
+                    } else {
+                        console.error('Error:', response.statusText);
+                }
+
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                }
+    }
+
+
+
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const linetypeElement = document.getElementById('id_linetype');
+        linetypeElement.addEventListener('change', async () => {
+            const linetype_id = linetypeElement.value;
+
+            const loan_forms=document.getElementsByClassName('loan-form');
+            const loan_forms_array = Array.from(loan_forms);
+            loan_forms_array.forEach(loan_form =>{
+                const scorecardtierElement = loan_form.querySelector('[name="scorecardtier"]');
+                const scorecardtier_id=scorecardtierElement.value;
+
+                filter_creditline(linetype_id, scorecardtier_id, loan_form)
+               
+            });
+        });
+    });
+    </script>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const promotypeElement = document.getElementById('id_promotype');
+    promotypeElement.addEventListener('change', async () => {
+        const promotype_id = promotypeElement.value;
+        try {
+            const response = await fetch(
+                `{% url "filter_promos" %}?promotype_id=${promotype_id}`,
+                {headers: {'X-Requested-With': 'XMLHttpRequest'}}
+            );
+            if (response.ok) {
+                const data = await response.json();
+                const promoSelectors=document.getElementsByName('promo');
+                const promoSelectors_array = Array.from(promoSelectors);
+
+                promoSelectors_array.forEach(promoSelector => {
+                        // Clear existing options
+                        promoSelector.innerHTML = '';
+
+                        // Populate new options from the response data
+                        data.promos.forEach(promo => {
+                            const option = document.createElement('option');
+                            option.value = promo.id;
+                            option.textContent = promo.name;
+                            promoSelector.appendChild(option);
+                        });
+                    });
+              
+            } else {
+                console.error('Error:', response.statusText)
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+
+
+            });
+        });
+</script>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const feetypeElement = document.getElementById('id_feetype');
+    feetypeElement.addEventListener('change', async () => {
+        const feetype_id = feetypeElement.value;
+        try {
+            const response = await fetch(
+                `{% url "filter_fees" %}?feetype_id=${feetype_id}`,
+                {headers: {'X-Requested-With': 'XMLHttpRequest'}}
+            );
+            if (response.ok) {
+                const data = await response.json();
+                const feeSelectors=document.getElementsByName('fee');
+                const feeSelectors_array = Array.from(feeSelectors);
+
+                feeSelectors_array.forEach(feeSelector => {
+                        // Clear existing options
+                        feeSelector.innerHTML = '';
+
+                        // Populate new options from the response data
+                        data.fees.forEach(fee => {
+                            const option = document.createElement('option');
+                            option.value = fee.id;
+                            option.textContent = fee.name;
+                            feeSelector.appendChild(option);
+                        });
+                    });
+              
+            } else {
+                console.error('Error:', response.statusText)
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+
+
+            });
+        });
+</script>

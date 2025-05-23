@@ -1,0 +1,28 @@
+<form method="post">
+    {% csrf_token %}
+    {{ product_form.as_p }}
+    {{ loan_form.as_p }}
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const productSelect = document.querySelector('#id_product');
+    const loanSelect = document.querySelector('#id_loan');
+
+    productSelect.addEventListener('change', function() {
+        const productId = this.value;
+        fetch(`/get_loans/${productId}/`)
+            .then(response => response.json())
+            .then(data => {
+                loanSelect.innerHTML = '';
+                data.loans.forEach(loan => {
+                    const option = document.createElement('option');
+                    option.value = loan.id;
+                    option.textContent = loan.amount;
+                    loanSelect.appendChild(option);
+                });
+            });
+    });
+});
+</script>

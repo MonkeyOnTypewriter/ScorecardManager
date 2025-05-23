@@ -1,0 +1,66 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+<div class="retailer-box" height="100%">
+<div class="retailer-form-box">
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" name="create_product">Create Product</button>
+    <button type="submit" name="all_products">All Products</button>
+
+</form>
+</div>
+<div class="product-detail-box">
+<iframe id='product_detail_iframe' width="100%" height="100%" style="border:none;" src="{{ product_detail_url }}" title="product detail display"></iframe>
+</div>
+</div>
+
+
+<iframe id='myIframe' width="100%" height="100%" style="border:none;" src="{{ iframe_url }}" title="retailer option console"></iframe>
+
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const retailerElement = document.getElementById('id_retailer');
+    retailerElement.addEventListener('change', async () => {
+        const retailer_id = retailerElement.value;
+        try {
+            const response = await fetch(
+                `{% url "filter_brandingcodes" %}?retailer_id=${retailer_id}`,
+                {headers: {'X-Requested-With': 'XMLHttpRequest'}}
+            );
+            if (response.ok) {
+                const data = await response.json();
+                const brandingcodeSelector=document.getElementById('id_brandingcode');
+                
+
+
+                        // Clear existing options
+                    brandingcodeSelector.innerHTML = '';
+
+                    // Populate new options from the response data
+                    data.brandingcodes.forEach(brandingcode => {
+                        const option = document.createElement('option');
+                        option.value = brandingcode.id;
+                        option.textContent = brandingcode.name;
+                        brandingcodeSelector.appendChild(option);
+                    });
+                    
+              
+            } else {
+                console.error('Error:', response.statusText)
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+
+
+            });
+        });
+</script>

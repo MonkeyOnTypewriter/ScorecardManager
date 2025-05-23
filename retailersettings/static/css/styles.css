@@ -1,0 +1,33 @@
+.loan-form {
+    display: flex;
+    flex-direction: row;
+}
+
+.loan-form p {
+    margin-right: 10px; /* Adjust spacing as needed */
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+.errorlist {
+    display: none;
+}
+
+.retailer-box {
+    display: flex;
+}
+.retailer-form-box {
+    height: 550px;
+    flex: 1;
+    margin-right: 10px;
+}
+.product-detail-box {
+    flex: 1;
+}

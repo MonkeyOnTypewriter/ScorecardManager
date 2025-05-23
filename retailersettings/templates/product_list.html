@@ -1,0 +1,20 @@
+<table>
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Branding Code</th>
+            <th>State</th>
+            <th>Creation Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in product_list %}
+        <tr>
+            <td> <a href='{% url "product_detail_options" product.id %}'>{{ product.name }}</a> </td>
+            <td>{{ product.brandingcode}}</td>
+            <td>{{ product.state }}</td>
+            <td>{{ product.creationdate }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

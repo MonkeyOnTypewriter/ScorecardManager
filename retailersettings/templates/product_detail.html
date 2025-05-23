@@ -1,0 +1,37 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+
+<p>Product: {{ product.name }}</p>
+<p>Application Process: {{ product.applicationprocess }}</p>
+<p>Scorecard: {{ product.scorecard }}</p>
+<p>Line Type: {{ product.linetype }}</p>
+<p>Promo Type: {{ product.promotype }}</p>
+<p>Fee Type: {{ product.feetype }}</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Tier</th>
+            <th>Credit Limit</th>
+            <th>Promo</th>
+            <th>APR</th>
+            <th>Fee</th>
+            <th>MDR</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for loan in loans %}
+            <tr>
+                <td>{{ loan.scorecardtier }}</td>
+                <td>{{ loan.creditlimit }}</td>
+                <td>{{ loan.promo }}</td>
+                <td>{{ loan.apr }}</td>
+                <td>{{ loan.fee }}</td>
+                <td>{{ loan.mdr }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+

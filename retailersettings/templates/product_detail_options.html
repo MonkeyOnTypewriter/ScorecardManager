@@ -1,0 +1,8 @@
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="product_id" value="{{ product_id }}">
+    <button type="submit" name="activate_product">Activate</button>
+</form>
+<div id="product-detail-box">
+    {{ product_detail_html }}
+</div>
